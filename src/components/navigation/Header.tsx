@@ -1,6 +1,6 @@
 // src/components/navigation/Header.tsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
 
 interface SubMenuItem {
@@ -21,14 +21,19 @@ const navigation: MenuItem[] = [
     path: '/cocopure',
     submenu: [
       {
+        title: 'Flavors',
+        description: 'Explore our range of coconut oil variations',
+        path: '/cocopure/flavors'
+      },
+      {
         title: 'Benefits & Features',
         description: 'Discover the amazing benefits of our premium coconut oil',
         path: '/cocopure/benefits'
       },
       {
-        title: 'Ingredients',
-        description: 'Learn about our carefully selected ingredients',
-        path: '/cocopure/ingredients'
+        title: 'Nutritional Facts',
+        description: 'Learn about the nutritional content',
+        path: '/cocopure/nutrition'
       },
       {
         title: 'Reviews',
@@ -38,23 +43,28 @@ const navigation: MenuItem[] = [
     ]
   },
   {
-    title: 'Coco Chips',
-    path: '/cocochips',
+    title: 'Cocobites',
+    path: '/cocobites',
     submenu: [
       {
         title: 'Flavors',
         description: 'Explore our delicious range of flavors',
-        path: '/cocochips/flavors'
+        path: '/cocobites/flavors'
       },
       {
-        title: 'Nutrition',
+        title: 'Benefits & Features',
+        description: 'Discover what makes our coconut chips special',
+        path: '/cocobites/benefits'
+      },
+      {
+        title: 'Nutritional Facts',
         description: 'Check out the nutritional information',
-        path: '/cocochips/nutrition'
+        path: '/cocobites/nutrition'
       },
       {
         title: 'Reviews',
         description: 'Read customer reviews and testimonials',
-        path: '/cocochips/reviews'
+        path: '/cocobites/reviews'
       }
     ]
   },
@@ -68,6 +78,10 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+
+  // Check if we're on the homepage
+  const isHomePage = location.pathname === '/';
 
   // Handle scroll effect
   useEffect(() => {
@@ -82,7 +96,7 @@ const Header: React.FC = () => {
   return (
     <header 
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+        isScrolled || !isHomePage ? 'bg-white shadow-md' : 'bg-transparent'
       }`}
     >
       <nav className="container mx-auto px-4">
@@ -91,10 +105,10 @@ const Header: React.FC = () => {
           <Link 
             to="/" 
             className={`text-2xl font-bold transition-colors ${
-              isScrolled ? 'text-gray-900' : 'text-white'
+              isScrolled || !isHomePage ? 'text-gray-900' : 'text-white'
             }`}
           >
-            Cocopure
+            KG Global Bevarages and Food Inc.
           </Link>
 
           {/* Desktop Navigation */}
@@ -105,7 +119,7 @@ const Header: React.FC = () => {
                   // Menu items with submenu
                   <button
                     className={`flex items-center space-x-1 py-2 transition-colors ${
-                      isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
+                      isScrolled || !isHomePage ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
                     }`}
                     onMouseEnter={() => setActiveMenu(item.path)}
                     onMouseLeave={() => setActiveMenu(null)}
@@ -118,7 +132,7 @@ const Header: React.FC = () => {
                   <Link
                     to={item.path}
                     className={`py-2 transition-colors ${
-                      isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
+                      isScrolled || !isHomePage ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
                     }`}
                   >
                     {item.title}
@@ -160,7 +174,7 @@ const Header: React.FC = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
-              isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
+              isScrolled || !isHomePage ? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-200'
             }`}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -169,7 +183,7 @@ const Header: React.FC = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4">
+          <div className="md:hidden py-4 bg-white">
             {navigation.map((item) => (
               <div key={item.path} className="space-y-2">
                 {item.submenu ? (

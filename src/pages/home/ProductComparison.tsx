@@ -1,44 +1,48 @@
 // src/components/home/ProductComparison.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { CheckCircle, XCircle } from 'lucide-react';
 
 interface ComparisonPoint {
+  id: string;
   feature: string;
-  cocopure: boolean;
-  regular: boolean;
   description: string;
+  coconutBased: string;
+  others: string;
 }
 
 const comparisonPoints: ComparisonPoint[] = [
   {
-    feature: "Cold-Pressed",
-    cocopure: true,
-    regular: false,
-    description: "Preserves natural nutrients and enzymes"
+    id: "nutritional",
+    feature: "Nutritional Value",
+    description: "Essential nutrients and enzymes for your body",
+    coconutBased: "Packed with essential nutrients and natural enzymes.",
+    others: "High in sugar and artificial additives."
   },
   {
-    feature: "Organic Certified",
-    cocopure: true,
-    regular: false,
-    description: "100% certified organic farming practices"
+    id: "hydration",
+    feature: "Hydration",
+    description: "Natural hydration and electrolyte balance",
+    coconutBased: "Naturally replenishes electrolytes for optimal hydration.",
+    others: "Lacks natural hydration properties."
   },
   {
-    feature: "Sustainable Sourcing",
-    cocopure: true,
-    regular: false,
-    description: "Environmentally conscious production"
+    id: "sustainability",
+    feature: "Sustainability",
+    description: "Eco-friendly and sustainable practices",
+    coconutBased: "Environmentally friendly and sustainably sourced.",
+    others: "Often produced with non-eco-friendly practices."
   },
   {
-    feature: "Premium Quality",
-    cocopure: true,
-    regular: true,
-    description: "High-grade coconut oil"
+    id: "digestive",
+    feature: "Digestive Health",
+    description: "Support for healthy digestion",
+    coconutBased: "Supports digestion with natural fibers and healthy fats.",
+    others: "Contains processed ingredients that can disrupt gut health."
   }
 ];
 
 const ProductComparison: React.FC = () => {
   const [position, setPosition] = useState(50);
-  const [selectedPoint, setSelectedPoint] = useState<ComparisonPoint | null>(null);
+  const [activeCard, setActiveCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
 
@@ -82,6 +86,12 @@ const ProductComparison: React.FC = () => {
     };
   }, []);
 
+  const handleCardClick = (e: React.MouseEvent, cardId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveCard(activeCard === cardId ? null : cardId);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Image Comparison Slider */}
@@ -89,26 +99,23 @@ const ProductComparison: React.FC = () => {
         ref={containerRef}
         className="relative h-[400px] overflow-hidden rounded-lg shadow-lg mb-8 select-none"
       >
-        {/* Regular Oil Image */}
         <img
           src="https://placehold.co/800x400"
-          alt="Regular Coconut Oil"
+          alt="Regular Product"
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
         
-        {/* Cocopure Image */}
         <div
           className="absolute top-0 left-0 h-full overflow-hidden"
           style={{ width: `${position}%` }}
         >
           <img
             src="https://placehold.co/800x400"
-            alt="Cocopure Oil"
+            alt="Cocopure Product"
             className="absolute top-0 left-0 w-full h-full object-cover"
           />
         </div>
 
-        {/* Slider Handle */}
         <div
           className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
           style={{ left: `${position}%` }}
@@ -119,58 +126,39 @@ const ProductComparison: React.FC = () => {
             ↔
           </div>
         </div>
-
-        {/* Product Labels */}
-        <div className="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded">
-          Regular Oil
-        </div>
-        <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded">
-          Cocopure
-        </div>
       </div>
 
-      {/* Comparison Points Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {comparisonPoints.map((point, index) => (
+      {/* Comparison Points */}
+      <div className="flex flex-col space-y-8 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
+        {comparisonPoints.map((point) => (
           <div 
-            key={index}
-            className="bg-white rounded-lg shadow-lg p-6 transform hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
-            onClick={() => setSelectedPoint(selectedPoint?.feature === point.feature ? null : point)}
+            key={point.id}
+            className="w-full"
           >
-            <h3 className="text-lg font-semibold mb-2">{point.feature}</h3>
-            <p className="text-gray-600 mb-4">{point.description}</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">Regular:</span>
-                {point.regular ? (
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-red-500" />
-                )}
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium">Cocopure:</span>
-                {point.cocopure ? (
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-red-500" />
-                )}
-              </div>
-            </div>
+            <div 
+              className={`bg-white rounded-lg shadow-lg p-6 transform transition-all duration-300
+                         ${activeCard === point.id ? 'ring-2 ring-blue-500' : 'hover:-translate-y-1'}`}
+              onClick={(e) => handleCardClick(e, point.id)}
+            >
+              <h3 className="text-lg font-semibold mb-2">{point.feature}</h3>
+              <p className="text-gray-600">{point.description}</p>
 
-            {/* Expanded Details */}
-            {selectedPoint?.feature === point.feature && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="text-sm text-gray-600">
-                  <p className="font-medium mb-2">Why it matters:</p>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>Better nutrient retention</li>
-                    <li>Enhanced flavor profile</li>
-                    <li>Longer shelf life</li>
-                  </ul>
+              <div 
+                className={`mt-4 pt-4 border-t border-gray-200 overflow-hidden transition-all duration-300
+                           ${activeCard === point.id ? 'max-h-96' : 'max-h-0'}`}
+              >
+                <div className="space-y-3">
+                  <div>
+                    <span className="font-semibold text-blue-600">Coconut-Based: </span>
+                    <span className="text-gray-700">{point.coconutBased}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-600">Others: </span>
+                    <span className="text-gray-700">{point.others}</span>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

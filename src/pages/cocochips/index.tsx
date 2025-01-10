@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 // Import subpages
 const Flavors = React.lazy(() => import('./Flavors'));
+const Benefits = React.lazy(() => import('./Benefits'));
 const Nutrition = React.lazy(() => import('./Nutrition'));
 const Reviews = React.lazy(() => import('./Reviews'));
 
@@ -19,7 +20,7 @@ const CocochipsPage = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex items-center">
             <div className="text-white p-8 max-w-2xl">
-              <h1 className="text-5xl font-bold mb-4">Coco Chips</h1>
+              <h1 className="text-5xl font-bold mb-4">Cocobites</h1>
               <p className="text-xl">Crispy, delicious, and naturally sweet coconut chips</p>
             </div>
           </div>
@@ -31,6 +32,7 @@ const CocochipsPage = () => {
         <Routes>
           <Route path="/" element={<Flavors />} />
           <Route path="/flavors" element={<Flavors />} />
+          <Route path="/benefits" element={<Benefits />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/reviews" element={<Reviews />} />
         </Routes>

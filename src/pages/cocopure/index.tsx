@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Import subpages
+const Flavors = React.lazy(() => import('./Flavors'));
 const Benefits = React.lazy(() => import('./Benefits'));
-const Ingredients = React.lazy(() => import('./Ingredients'));
+const Nutrition = React.lazy(() => import('./Nutrition'));
 const Reviews = React.lazy(() => import('./Reviews'));
 
 const CocopurePage = () => {
@@ -29,9 +29,10 @@ const CocopurePage = () => {
       {/* Nested Routes */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<Benefits />} />
+          <Route path="/" element={<Flavors />} />
+          <Route path="/flavors" element={<Flavors />} />
           <Route path="/benefits" element={<Benefits />} />
-          <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/reviews" element={<Reviews />} />
         </Routes>
       </React.Suspense>

@@ -15,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/cocopure/*" element={<CocopurePage />} />
-            <Route path="/cocochips/*" element={<CocochipsPage />} />
+            <Route path="/cocobites/*" element={<CocochipsPage />} />
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </React.Suspense>
